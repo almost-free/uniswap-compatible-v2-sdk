@@ -27,17 +27,17 @@ export class Pair {
   public readonly liquidityToken: Token
   private readonly tokenAmounts: [TokenAmount, TokenAmount]
 
-  public static getAddress(tokenA: Token, tokenB: Token): string {
-    return computePairAddress({ factoryAddress: FACTORY_ADDRESS, tokenA, tokenB })
+  public static getAddress(tokenA: Token, tokenB: Token, factoryAddress?: string): string {
+    return computePairAddress({ factoryAddress: factoryAddress ?? FACTORY_ADDRESS, tokenA, tokenB })
   }
 
-  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount) {
+  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, factoryAddress?: string) {
     const tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
       ? [tokenAmountA, tokenAmountB]
       : [tokenAmountB, tokenAmountA]
     this.liquidityToken = new Token(
       tokenAmounts[0].token.chainId,
-      Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token),
+      Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token, factoryAddress ?? FACTORY_ADDRESS),
       18,
       'UNI-V2',
       'Uniswap V2'
