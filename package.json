@@ -1,17 +1,20 @@
 {
-  "name": "@uniswap/v2-sdk",
+  "name": "uniswap-compatible-v2-sdk",
   "license": "MIT",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "description": "🛠 An SDK for building applications on top of Uniswap V2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "repository": "https://github.com/Uniswap/uniswap-v2-sdk.git",
+  "repository": "https://github.com/almost-free/uniswap-compatible-v2-sdk.git",
   "keywords": [
     "uniswap",
-    "ethereum"
+    "uniswap-v2",
+    "ethereum",
+    "evm",
+    "dex"
   ],
   "module": "dist/v2-sdk.esm.js",
   "scripts": {
