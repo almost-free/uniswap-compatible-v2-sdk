@@ -221,6 +221,7 @@ var InsufficientInputAmountError = /*#__PURE__*/function (_Error2) {
 
 var computePairAddress = function computePairAddress(_ref) {
   var factoryAddress = _ref.factoryAddress,
+      initCodeHash = _ref.initCodeHash,
       tokenA = _ref.tokenA,
       tokenB = _ref.tokenB;
 
@@ -229,19 +230,20 @@ var computePairAddress = function computePairAddress(_ref) {
       token1 = _ref2[1]; // does safety checks
 
 
-  return address.getCreate2Address(factoryAddress, solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [token0.address, token1.address])]), INIT_CODE_HASH);
+  return address.getCreate2Address(factoryAddress, solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [token0.address, token1.address])]), initCodeHash);
 };
 var Pair = /*#__PURE__*/function () {
-  function Pair(tokenAmountA, tokenAmountB, factoryAddress) {
+  function Pair(tokenAmountA, tokenAmountB, factoryAddress, initCodeHash) {
     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
     ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-    this.liquidityToken = new sdkCore.Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token, factoryAddress != null ? factoryAddress : FACTORY_ADDRESS), 18, 'UNI-V2', 'Uniswap V2');
+    this.liquidityToken = new sdkCore.Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token, factoryAddress != null ? factoryAddress : FACTORY_ADDRESS, initCodeHash != null ? initCodeHash : INIT_CODE_HASH), 18, 'UNI-V2', 'Uniswap V2');
     this.tokenAmounts = tokenAmounts;
   }
 
-  Pair.getAddress = function getAddress(tokenA, tokenB, factoryAddress) {
+  Pair.getAddress = function getAddress(tokenA, tokenB, factoryAddress, initCodeHash) {
     return computePairAddress({
       factoryAddress: factoryAddress != null ? factoryAddress : FACTORY_ADDRESS,
+      initCodeHash: initCodeHash != null ? initCodeHash : INIT_CODE_HASH,
       tokenA: tokenA,
       tokenB: tokenB
     });

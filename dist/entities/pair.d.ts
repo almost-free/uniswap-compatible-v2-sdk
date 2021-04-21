@@ -1,14 +1,15 @@
 import { BigintIsh, ChainId, Price, Token, TokenAmount } from '@uniswap/sdk-core';
-export declare const computePairAddress: ({ factoryAddress, tokenA, tokenB }: {
+export declare const computePairAddress: ({ factoryAddress, initCodeHash, tokenA, tokenB }: {
     factoryAddress: string;
+    initCodeHash: string;
     tokenA: Token;
     tokenB: Token;
 }) => string;
 export declare class Pair {
     readonly liquidityToken: Token;
     private readonly tokenAmounts;
-    static getAddress(tokenA: Token, tokenB: Token, factoryAddress?: string): string;
-    constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, factoryAddress?: string);
+    static getAddress(tokenA: Token, tokenB: Token, factoryAddress?: string, initCodeHash?: string): string;
+    constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, factoryAddress?: string, initCodeHash?: string);
     /**
      * Returns true if the token is either token0 or token1
      * @param token to check

@@ -9,10 +9,12 @@ import { InsufficientReservesError, InsufficientInputAmountError } from '../erro
 
 export const computePairAddress = ({
   factoryAddress,
+  initCodeHash,
   tokenA,
   tokenB
 }: {
   factoryAddress: string
+  initCodeHash: string
   tokenA: Token
   tokenB: Token
 }): string => {
@@ -20,24 +22,24 @@ export const computePairAddress = ({
   return getCreate2Address(
     factoryAddress,
     keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
-    INIT_CODE_HASH
+    initCodeHash
   )
 }
 export class Pair {
   public readonly liquidityToken: Token
   private readonly tokenAmounts: [TokenAmount, TokenAmount]
 
-  public static getAddress(tokenA: Token, tokenB: Token, factoryAddress?: string): string {
-    return computePairAddress({ factoryAddress: factoryAddress ?? FACTORY_ADDRESS, tokenA, tokenB })
+  public static getAddress(tokenA: Token, tokenB: Token, factoryAddress?: string, initCodeHash?: string): string {
+    return computePairAddress({ factoryAddress: factoryAddress ?? FACTORY_ADDRESS, initCodeHash: initCodeHash ?? INIT_CODE_HASH, tokenA, tokenB })
   }
 
-  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, factoryAddress?: string) {
+  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, factoryAddress?: string, initCodeHash?: string) {
     const tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
       ? [tokenAmountA, tokenAmountB]
       : [tokenAmountB, tokenAmountA]
     this.liquidityToken = new Token(
       tokenAmounts[0].token.chainId,
-      Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token, factoryAddress ?? FACTORY_ADDRESS),
+      Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token, factoryAddress ?? FACTORY_ADDRESS, initCodeHash ?? INIT_CODE_HASH),
       18,
       'UNI-V2',
       'Uniswap V2'
